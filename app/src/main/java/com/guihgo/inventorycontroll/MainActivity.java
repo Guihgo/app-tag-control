@@ -56,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
         /* Initial database population */
         List<TagEntity> tagEntities = new ArrayList<>();
-        tagEntities.add(new TagEntity("#AABBCCDD", "Tire Good Year 177/09", "A good tire for your car"));
-        tagEntities.add(new TagEntity("#FFDDCCBB", "Tire Used 1998", "A good tire for your bike"));
+        tagEntities.add(new TagEntity("AABBCCDD", "Tire Good Year 177/09", "A good tire for your car"));
+        tagEntities.add(new TagEntity("FFDDCCBB", "Tire Used 1998", "A good tire for your bike"));
+        tagEntities.add(new TagEntity("AAAAAAAA", "Tire A ", "A good tire A"));
+        tagEntities.add(new TagEntity("BBBBBBBB", "Tire B ", "A good tire B"));
 
         ContentValues cvTags = new ContentValues();
         for (int i = 0; i < tagEntities.size(); i++) {

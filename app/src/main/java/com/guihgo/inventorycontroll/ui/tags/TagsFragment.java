@@ -1,15 +1,20 @@
 package com.guihgo.inventorycontroll.ui.tags;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,15 +23,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
 import com.guihgo.inventorycontroll.Helper;
+import com.guihgo.inventorycontroll.R;
 import com.guihgo.inventorycontroll.database.DatabaseHelper;
 import com.guihgo.inventorycontroll.database.TagContract;
 import com.guihgo.inventorycontroll.model.tag.TagEntity;
 import com.guihgo.inventorycontroll.databinding.FragmentTagsBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TagsFragment extends Fragment {
 
@@ -35,10 +41,19 @@ public class TagsFragment extends Fragment {
     private RecyclerView recyclerView;
     protected TagListAdapter tagListAdapter;
 
-    public List<TagEntity> tagEntities;
     private BottomNavigationView bnvMenu;
 
     DatabaseHelper dbHelper;
+    SQLiteDatabase db;
+
+    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == Activity.RESULT_OK) {
+                refreshData();
+            }
+        }
+    });
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,12 +63,83 @@ public class TagsFragment extends Fragment {
         binding = FragmentTagsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        recyclerView = binding.recyclerView;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        tagListAdapter = new TagListAdapter(null);
+        tagListAdapter.setupRecycleView(recyclerView);
+
         dbHelper = new DatabaseHelper(getContext());
+        db = dbHelper.getWritableDatabase();
 
-        /* Load from database */
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        this.refreshData();
 
-        tagEntities = new ArrayList<>();
+        tagListAdapter.setOnItemInteractionListener(new TagListAdapter.OnItemInteractionListener() {
+            @Override
+            public void onItemSwipedLeft(int position) {
+
+                TagEntity item = tagListAdapter.tagEntityList.get(position);
+
+                MaterialAlertDialogBuilder madbConfirm = new MaterialAlertDialogBuilder(getContext());
+
+                String title = getContext().getString(R.string.dialog_confirm_remove_title);
+
+                String message = getContext().getString(R.string.dialog_confirm_remove_message)
+                        .replace("{{entity_name}}", TagContract.TagEntry.TABLE_NAME)
+                        .replace("{{entity_id}}", item.name + "(#"+item.id+")");
+
+                madbConfirm.setTitle(title);
+                madbConfirm.setMessage(message);
+
+                madbConfirm.setNeutralButton(getResources().getString(R.string.dialog_confirm_remove_button_cancel), (dialog, which) -> {
+                    tagListAdapter.notifyItemChanged(position);
+                });
+                madbConfirm.setPositiveButton(getResources().getString(R.string.dialog_confirm_remove_button_remove), (dialog, which) -> {
+
+                    String where = TagContract.TagEntry.COLUMN_NAME_ID + " = ?";
+                    String[] whereArgs = {item.id};
+                    db.delete(TagContract.TagEntry.TABLE_NAME, where, whereArgs);
+                    tagListAdapter.tagEntityList.remove(position);
+                    tagListAdapter.notifyItemRemoved(position);
+                });
+
+                madbConfirm.show();
+            }
+
+            @Override
+            public void onItemSwipedRight(int position) {
+
+            }
+
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getActivity(), TagAddEdit.class);
+                intent.putExtra(TagAddEdit.KEY_ID, tagListAdapter.tagEntityList.get(position).id);
+                startForResult.launch(intent);
+            }
+        });
+
+        bnvMenu = binding.bottomNavigation;
+
+        bnvMenu.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                Helper.confirmTouch(getContext());
+                switch (item.getItemId()) {
+                    case R.id.tags_add:
+                        startForResult.launch(new Intent(getActivity(), TagAddEdit.class));
+                        return true;
+                }
+
+                return false;
+            }
+        });
+
+        return root;
+    }
+
+    void refreshData() {
+        tagListAdapter.tagEntityList = new ArrayList<>();
         String[] projection = {
                 TagContract.TagEntry.COLUMN_NAME_ID,
                 TagContract.TagEntry.COLUMN_NAME_NAME,
@@ -65,7 +151,7 @@ public class TagsFragment extends Fragment {
         Cursor cursor = db.query(TagContract.TagEntry.TABLE_NAME, projection, null,null,null,null, sortOrder);
 
         while(cursor.moveToNext()) {
-            tagEntities.add(new TagEntity(
+            tagListAdapter.tagEntityList.add(new TagEntity(
                     cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_DESCRIPTION))
@@ -73,42 +159,7 @@ public class TagsFragment extends Fragment {
         }
         cursor.close();
 
-
-        tagListAdapter = new TagListAdapter(tagEntities);
-
-        recyclerView = binding.recyclerView;
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-
-        tagListAdapter.setupRecycleView(recyclerView);
-
-        tagListAdapter.setOnItemSlideListener(new TagListAdapter.OnItemSlideListener() {
-            @Override
-            public void onItemSlideLeft(int position) {
-                Toast.makeText(getContext(), "Item " + tagListAdapter.tagEntityList.get(position).name + " was removed", Toast.LENGTH_SHORT).show();
-                tagListAdapter.tagEntityList.remove(position);
-                tagListAdapter.notifyItemRemoved(position);
-            }
-
-            @Override
-            public void onItemSlideRight(int position) {
-
-            }
-        });
-
-        bnvMenu = binding.bottomNavigation;
-
-        bnvMenu.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                Helper.confirmTouch(getContext());
-                Toast.makeText(getContext(), item.getItemId() +" Cliecked on " + item.toString(), Toast.LENGTH_SHORT).show();
-
-                return true;
-            }
-        });
-
-        return root;
+        tagListAdapter.notifyDataSetChanged();
     }
 
     @Override

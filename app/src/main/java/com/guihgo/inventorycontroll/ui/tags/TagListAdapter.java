@@ -6,13 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.guihgo.inventorycontroll.R;
 import com.guihgo.inventorycontroll.model.tag.TagEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,24 +23,26 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
 
     public ItemTouchHelper itemTouchHelper;
 
-    public interface OnItemSlideListener {
-        public void onItemSlideLeft(int position);
-        public void onItemSlideRight(int position);
+    public interface OnItemInteractionListener {
+        public void onItemSwipedLeft(int position);
+        public void onItemSwipedRight(int position);
+        public void onItemClick(int position);
     }
 
-    private OnItemSlideListener onItemSlideListener = null;
+    private OnItemInteractionListener onItemInteractionListener = null;
 
     public void setupRecycleView(RecyclerView recyclerView) {
         recyclerView.setAdapter(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    public TagListAdapter(List<TagEntity> tagEntityList) {
-        this.tagEntityList = tagEntityList;
+    public TagListAdapter(@Nullable List<TagEntity> tagEntityList) {
+        this.tagEntityList = (tagEntityList == null) ? new ArrayList<>() : tagEntityList;
 
         TagListAdapter adapter = this;
 
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 return makeMovementFlags(0, ItemTouchHelper.END);
@@ -52,17 +55,17 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                if(adapter.onItemSlideListener == null) return;
+                if(adapter.onItemInteractionListener == null) return;
 
                 if(direction == ItemTouchHelper.END) {
-                    adapter.onItemSlideListener.onItemSlideLeft(viewHolder.getAbsoluteAdapterPosition());
+                    adapter.onItemInteractionListener.onItemSwipedLeft(viewHolder.getAbsoluteAdapterPosition());
                 }
             }
         });
     }
 
-    public void setOnItemSlideListener(OnItemSlideListener onItemSlideListener) {
-        this.onItemSlideListener = onItemSlideListener;
+    public void setOnItemInteractionListener(OnItemInteractionListener onItemInteractionListener) {
+        this.onItemInteractionListener = onItemInteractionListener;
     }
 
     @NonNull
@@ -78,6 +81,13 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
         holder.idTextView.setText("#" + tagEntity.id);
         holder.nameTextView.setText(tagEntity.name);
         holder.descriptionTextView.setText(tagEntity.description);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemInteractionListener.onItemClick(holder.getAbsoluteAdapterPosition());
+            }
+        });
     }
 
     @Override

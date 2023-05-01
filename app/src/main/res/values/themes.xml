@@ -19,7 +19,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.InventoryControll.AppBarOverlay" parent="ThemeOverlay.Material3.Light" />
+    <style name="Theme.InventoryControll.AppBarOverlay" parent="ThemeOverlay.Material3.Dark" />
 
-    <style name="Theme.InventoryControll.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
+    <style name="Theme.InventoryControll.PopupOverlay" parent="ThemeOverlay.Material3.Dark" />
 </resources>
