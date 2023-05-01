@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/tags_btn_scan"
+        android:enabled="true"
+        android:icon="@drawable/ic_contactless"
+        android:checked="false"
+        android:title="@string/scan"/>
+    <item
+        android:id="@+id/tags_btn_add"
+        android:enabled="true"
+        android:checked="false"
+        android:icon="@drawable/ic_new_label"
+        android:title="@string/add"/>
+</menu>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/list_item_vertical_gap"
+    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurfaceVariant"
+            android:padding="4dp"
+            android:layout_gravity="right"
+            android:text="#TAG_ID"
+            android:id="@+id/tag_id"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tag_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TAG_NAME"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
+                <TextView
+                    android:id="@+id/tag_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="TAG_DESCRIPTION"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
