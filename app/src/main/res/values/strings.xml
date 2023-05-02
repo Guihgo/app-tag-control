@@ -31,6 +31,11 @@
     <string name="dialog_confirm_remove_button_remove">Remove</string>
     <string name="dialog_confirm_remove_button_cancel">Cancel</string>
 
+<!-- Dialog Scan Tag -->
+    <string name="dialog_scan_tag_title">Scanning tag...</string>
+    <string name="dialog_scan_tag_message">Supported tags:\n\t- NFC A\n\t- NFC B\n\t- NFC F\n\t- NFC V\n\t- NFC NDEF</string>
+    <string name="dialog_scan_tag_button_stop">Stop</string>
+
 <!-- Tag -->
     <string name="tag_id">ID</string>
     <string name="tag_id_required">ID is required. Please, scan one.</string>

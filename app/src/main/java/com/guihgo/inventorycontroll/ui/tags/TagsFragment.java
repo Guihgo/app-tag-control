@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -128,6 +130,28 @@ public class TagsFragment extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.tags_add:
                         startForResult.launch(new Intent(getActivity(), TagAddEdit.class));
+                        return true;
+                    case R.id.tags_scan:
+                        Helper.scanTag(getActivity(), new Helper.OnScanTagListener() {
+                            @Override
+                            public void onStop() {
+//                                Toast.makeText(getContext(), "stopped!", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onScanned(Tag tag) {
+                                if(Looper.myLooper() == null) {
+                                    Looper.prepare();
+                                }
+
+                                String tagId = Helper.bytesToHex(tag.getId());
+//                                Toast.makeText(getContext(), "Scanned tag id: #"+tagId, Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(getActivity(), TagAddEdit.class);
+                                intent.putExtra(TagAddEdit.KEY_ID, tagId);
+                                startForResult.launch(intent);
+                            }
+                        });
                         return true;
                 }
 

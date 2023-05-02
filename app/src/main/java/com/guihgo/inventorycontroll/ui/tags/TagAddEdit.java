@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.guihgo.inventorycontroll.Helper;
 import com.guihgo.inventorycontroll.R;
 import com.guihgo.inventorycontroll.database.DatabaseHelper;
 import com.guihgo.inventorycontroll.database.TagContract;
@@ -40,38 +43,40 @@ public class TagAddEdit extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String id = getIntent().getStringExtra(KEY_ID);
-        this.isAddMode = id == null;
-
-        getSupportActionBar().setTitle(((this.isAddMode) ? getString(R.string.action_add):getString(R.string.action_edit)) + " Tag");
+        if(id == null) id = "";
 
         dbHelper = new DatabaseHelper(this);
         db = dbHelper.getWritableDatabase();
 
+        this.updateUI(id);
+    }
+
+    void updateUI(String id) {
         /* Load entity for edit mode */
-        if(this.isAddMode) {
-            tagEntity = new TagEntity("", "", "");
+        String[] projection = {
+                TagContract.TagEntry.COLUMN_NAME_ID,
+                TagContract.TagEntry.COLUMN_NAME_NAME,
+                TagContract.TagEntry.COLUMN_NAME_DESCRIPTION
+        };
+
+        String where = TagContract.TagEntry.COLUMN_NAME_ID + " = ?";
+        String[] whereArgs = {id};
+
+        Cursor cursor = db.query(TagContract.TagEntry.TABLE_NAME, projection, where, whereArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            this.isAddMode = false;
+            tagEntity = new TagEntity(
+                    cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_DESCRIPTION))
+            );
         } else {
-            String[] projection = {
-                    TagContract.TagEntry.COLUMN_NAME_ID,
-                    TagContract.TagEntry.COLUMN_NAME_NAME,
-                    TagContract.TagEntry.COLUMN_NAME_DESCRIPTION
-            };
-
-            String where = TagContract.TagEntry.COLUMN_NAME_ID + " = ?";
-            String[] whereArgs = {id};
-
-            Cursor cursor = db.query(TagContract.TagEntry.TABLE_NAME, projection, where,whereArgs, null, null, null);
-            if(cursor.moveToFirst()) {
-                tagEntity = new TagEntity(
-                        cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_NAME)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(TagContract.TagEntry.COLUMN_NAME_DESCRIPTION))
-                );
-            } else {
-                onSupportNavigateUp();
-            }
-            cursor.close();
+            this.isAddMode = true;
+            tagEntity = new TagEntity(id, "", "");
         }
+        cursor.close();
+
+        getSupportActionBar().setTitle(((this.isAddMode) ? getString(R.string.action_add) : getString(R.string.action_edit)) + " Tag");
 
         binding.tagId.getEditText().setText(tagEntity.id);
         binding.tagId.setOnClickListener(v -> {
@@ -81,7 +86,24 @@ public class TagAddEdit extends AppCompatActivity {
             binding.tagId.setErrorEnabled(false);
         });
         binding.tagId.setEndIconOnClickListener(v -> {
-            Toast.makeText(this, "scan now", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "scan now", Toast.LENGTH_SHORT).show();
+            Helper.scanTag(this, new Helper.OnScanTagListener() {
+                @Override
+                public void onStop() {
+
+                }
+
+                @Override
+                public void onScanned(Tag tag) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateUI(Helper.bytesToHex(tag.getId()));
+                        }
+                    });
+
+                }
+            });
         });
 
         binding.tagName.getEditText().setText(tagEntity.name);
@@ -89,7 +111,7 @@ public class TagAddEdit extends AppCompatActivity {
     }
 
     void save() {
-        if(binding.tagId.getEditText().getText().length() == 0 || binding.tagId.getEditText().getText().toString() == "") {
+        if (binding.tagId.getEditText().getText().length() == 0 || binding.tagId.getEditText().getText().toString() == "") {
             binding.tagId.setError(getString(R.string.tag_id_required));
             binding.tagId.setErrorEnabled(true);
             return;
@@ -99,11 +121,11 @@ public class TagAddEdit extends AppCompatActivity {
         cvTag.put(TagContract.TagEntry.COLUMN_NAME_NAME, binding.tagName.getEditText().getText().toString());
         cvTag.put(TagContract.TagEntry.COLUMN_NAME_DESCRIPTION, binding.tagDescription.getEditText().getText().toString());
 
-        if(this.isAddMode) {
+        if (this.isAddMode) {
             db.insert(TagContract.TagEntry.TABLE_NAME, null, cvTag);
         } else {
             String where = TagContract.TagEntry.COLUMN_NAME_ID + " = ?";
-            String[] whereArgs = { tagEntity.id };
+            String[] whereArgs = {tagEntity.id};
             db.update(TagContract.TagEntry.TABLE_NAME, cvTag, where, whereArgs);
         }
         this.setResult(Activity.RESULT_OK);

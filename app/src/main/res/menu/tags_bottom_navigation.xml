@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/tags_btn_scan"
+        android:id="@+id/tags_scan"
         android:enabled="true"
         android:icon="@drawable/ic_contactless"
         android:checked="false"

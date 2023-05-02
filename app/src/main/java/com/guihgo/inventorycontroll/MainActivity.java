@@ -1,10 +1,16 @@
 package com.guihgo.inventorycontroll;
 
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         /* Initial database population */
         List<TagEntity> tagEntities = new ArrayList<>();
-        tagEntities.add(new TagEntity("AABBCCDD", "Tire Good Year 177/09", "A good tire for your car"));
-        tagEntities.add(new TagEntity("FFDDCCBB", "Tire Used 1998", "A good tire for your bike"));
-        tagEntities.add(new TagEntity("AAAAAAAA", "Tire A ", "A good tire A"));
-        tagEntities.add(new TagEntity("BBBBBBBB", "Tire B ", "A good tire B"));
+//        tagEntities.add(new TagEntity("AABBCCDD", "Tire Good Year 177/09", "A good tire for your car"));
+//        tagEntities.add(new TagEntity("FFDDCCBB", "Tire Used 1998", "A good tire for your bike"));
+//        tagEntities.add(new TagEntity("AAAAAAAA", "Tire A ", "A good tire A"));
+//        tagEntities.add(new TagEntity("BBBBBBBB", "Tire B ", "A good tire B"));
 
         ContentValues cvTags = new ContentValues();
         for (int i = 0; i < tagEntities.size(); i++) {
@@ -104,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 //                recreate();
             }
         });
-
     }
 
     @Override
@@ -120,9 +125,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        Helper.stopReadNFC(this);
+        super.onPause();
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+//        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+//
+//            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//
+//            Toast.makeText(this, "Scanned tag with id #"+tag.getId().toString(), Toast.LENGTH_SHORT).show();
+
+//            Parcelable[] rawMessages =
+//                    intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+//            if (rawMessages != null) {
+//                NdefMessage[] messages = new NdefMessage[rawMessages.length];
+//                for (int i = 0; i < rawMessages.length; i++) {
+//                    messages[i] = (NdefMessage) rawMessages[i];
+//                }
+//                // Process the messages array.
+//            }
+//        }
+
     }
 }
