@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.NFC" />
-    <uses-feature android:name="android.hardware.nfc" android:required="true" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,16 +10,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.InventoryControll.AppBarOverlay"
+        android:theme="@style/Theme.TagControl.AppBarOverlay"
         tools:targetApi="31">
         <activity
-            android:name=".ui.tags.TagAddEdit"
+            android:name=".ui.inventory.InventoryAddEdit"
             android:exported="false"
-            android:theme="@style/Theme.InventoryControll"/>
+            android:theme="@style/Theme.TagControl" />
+        <activity
+            android:name=".ui.tag.TagAddEdit"
+            android:exported="false"
+            android:theme="@style/Theme.TagControl" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.InventoryControll.NoActionBar">
+            android:theme="@style/Theme.TagControl.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,4 +31,12 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.NFC" />
+
 </manifest>

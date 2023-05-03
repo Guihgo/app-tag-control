@@ -8,4 +8,5 @@
     <dimen name="line_break">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="list_item_vertical_gap">8dp</dimen>
+    <dimen name="list_item_horizontal_padding">8dp</dimen>
 </resources>

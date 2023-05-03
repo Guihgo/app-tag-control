@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.guihgo.inventorycontroll'
+    namespace 'com.guihgo.tagcontrol'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.guihgo.inventorycontroll"
+        applicationId "com.guihgo.tagcontrol"
         minSdk 16
         targetSdk 33
         versionCode 1

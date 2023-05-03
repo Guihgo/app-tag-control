@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_tags"
-        android:name="com.guihgo.inventorycontroll.ui.tags.TagsFragment"
+        android:name="com.guihgo.tagcontrol.ui.tag.TagsFragment"
         android:label="@string/menu_tag"
         tools:layout="@layout/fragment_tags" />
 
     <fragment
         android:id="@+id/nav_inventory"
-        android:name="com.guihgo.inventorycontroll.ui.inventory.InventoryFragment"
+        android:name="com.guihgo.tagcontrol.ui.inventory.InventoriesFragment"
         android:label="@string/menu_inventory"
-        tools:layout="@layout/fragment_inventory" />
+        tools:layout="@layout/fragment_inventories" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.guihgo.inventorycontroll.ui.slideshow.SlideshowFragment"
+        android:name="com.guihgo.tagcontrol.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>
