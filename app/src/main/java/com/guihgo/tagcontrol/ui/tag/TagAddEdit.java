@@ -48,7 +48,7 @@ public class TagAddEdit extends AppCompatActivity {
     }
 
     void updateUI(String id) {
-        /* Load entity for edit mode */
+        /* Load entity */
         String[] projection = {
                 TagContract.TagEntry.COLUMN_NAME_ID,
                 TagContract.TagEntry.COLUMN_NAME_NAME,

@@ -1,6 +1,6 @@
-# Inventory Controll
+# Tag Control
 
-A inventory controller app with NFC support
+A tag controller app with NFC support
 
 ## NFC
 - Tag Id
@@ -13,6 +13,7 @@ A inventory controller app with NFC support
 	- description 	=> Pneu para carro
 
 ### inventory
+    - id            => 1
 	- @Item::id		=> 0xBB3B7340
 	- quantity 		=> 3
 	- validity		=> 29/04/2023
@@ -28,13 +29,11 @@ A inventory controller app with NFC support
 - [ ] Uso de, pelo menos, um Adapter Customizado 0,5
 - [ ] Uso de AlertDialog para confirmar as ações do usuário antes de excluir dados persistidos 0,5
 - [ ] Uso de Menus de Ação Contextual - Neste as opções do menu aparecem na barra do aplicativo 0,5
-- [ ] Permitir a configuração de alguma opção de uso do aplicativo, e persistir esta informação
-- [ ] usando SharedPreferences.
-- [ ] Não serão aceitos trocar a cor de fundo de layout, ou salvar login e senha de usuário
-- [ ] (visto que o aplicativo é para uso sem conexão) 0,5
+- [ ] Permitir a configuração de alguma opção de uso do aplicativo, e persistir esta informação usando SharedPreferences.
 - [ ] Uso do botão Up (“Para cima”) para voltar das Activities secundárias 0,5
 - [ ] Activity com Informações sobre a Autoria do App 0,5
 - [ ] Uso de Menu de Opções, com as ações aparecendo com ícones na barra de ação 0,5
 - [ ] Suporte ao idioma inglês como padrão 0,5
 - [ ] Suporte ao idioma Português do Brasil como opcional 0,5
-- [ ] Total 10,0
+
+Total 10,0
