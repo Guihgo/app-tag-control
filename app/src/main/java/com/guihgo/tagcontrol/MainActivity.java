@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,9 +35,11 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-    private AppBarMainBinding appBarMainBinding;
+
+    NavController navController;
 
     private MaterialSwitch switchTheme;
+    private boolean isDarkTheme;
 
     DatabaseHelper dbHelper;
 
@@ -42,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Helper.restoreApplicationLocale(this);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
@@ -76,11 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawerLayout = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_tags, R.id.nav_inventory)
+                R.id.nav_tags, R.id.nav_inventory, R.id.nav_settings)
                 .setOpenableLayout(drawerLayout)
                 .build();
 
@@ -88,23 +96,30 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         switchTheme = (MaterialSwitch) navigationView.getHeaderView(0).findViewById(R.id.switch_theme);
-        Context thi = getApplicationContext();
+        switchTheme.setChecked(this.isDarkTheme);
         switchTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(isChecked) {
-//                    setTheme(R.style.Theme_InventoryControll);
-//                } else {
-//                    setTheme(R.style.Theme_InventoryControll_Light);
-//                }
-//                recreate();
+                String themeStyle = (isChecked) ? "dark" : "light";
+                Helper.saveTheme(getApplicationContext(), themeStyle);
+                recreate();
             }
         });
     }
 
     @Override
-    public Resources.Theme getTheme() {
-        return super.getTheme();
+    protected void onStart() {
+        super.onStart();
+//        if(getIntent().hasCategory(CATEGORY_GO_TO_SETTINGS)) {
+////            Toast.makeText(this, "Must go to settings", Toast.LENGTH_SHORT).show();
+////            this.navController.naviga
+//            this.navController.getGraph().setStartDestination(R.id.nav_settings);
+//        }
+    }
+
+    @Override
+    public void setTheme(int resId) {
+        this.isDarkTheme = Helper.restoreTheme(this, true);
     }
 
     @Override

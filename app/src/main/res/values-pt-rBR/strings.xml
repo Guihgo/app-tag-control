@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Tag Control</string>
+    <string name="app_version">V1.0.0</string>
+
+    <string name="navigation_drawer_open">Abrir navegação drawer</string>
+    <string name="navigation_drawer_close">Fechar navegação drawer</string>
+    <string name="nav_header_title">@string/app_name</string>
+
+    <!--Actions -->
+    <string name="action_add">Add</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_scan">Scanear</string>
+
+    <!--Menu -->
+    <string name="menu_tag">Tags</string>
+    <string name="menu_inventory">Inventários</string>
+    <string name="menu_settings">Configurações</string>
+
+    <!--Commons-->
+    <string name="management">Gerenciamento</string>
+    <string name="theme">Tema escuro</string>
+    <string name="not_found">não encontrado</string>
+
+    <!-- Dialog Confirm Remove -->
+    <string name="dialog_confirm_remove_title">Você tem certeza?</string>
+    <string name="dialog_confirm_remove_message">Atenção! O(a) {{entity_name}} {{entity_id}} será removida.</string>
+    <string name="dialog_confirm_remove_button_remove">Remover</string>
+    <string name="dialog_confirm_remove_button_cancel">Cancelar</string>
+
+    <!-- Dialog Scan Tag -->
+    <string name="dialog_scan_tag_title">Scaniando tag...</string>
+    <string name="dialog_scan_tag_message">Tags suportadas:\n\t- NFC A\n\t- NFC B\n\t- NFC F\n\t- NFC V\n\t- NFC NDEF</string>
+    <string name="dialog_scan_tag_button_stop">Parar</string>
+
+    <!-- Tag -->
+    <string name="tag_id">ID</string>
+    <string name="tag_id_required">ID é requerido. Por favor, scaneie uma tag.</string>
+    <string name="tag_name">Nome</string>
+    <string name="tag_description">Descrição</string>
+
+    <!-- Inventory -->
+    <string name="inventory">Inventário</string>
+    <string name="inventory_tag_id">Id da tag</string>
+    <string name="inventory_tag_name">Nome da tag</string>
+    <string name="inventory_expiration_date">Data de expiração</string>
+    <string name="inventory_quantity">Quantidade</string>
+    <string name="inventory_quantity_required">Quantidade é requerida</string>
+    <string name="inventory_quantity_too_low">Quantidade muito baixa</string>
+
+    <!-- Settings -->
+    <string name="settings_languages">Linguagens</string>
+    <string-array name="settings_languages">
+        <item>Inglês - US (en)</item>
+        <item>Português - BR (pt_BR)</item>
+    </string-array>
+    <string name="settings_about">Sobre</string>
+    <string name="settings_about_message">\Desenvolvido por Guilherme Henrique\nE-mail: guihgo.contato@gmail.com\n\nCompre-me um café:\n0x07525F186A823a56ac0A1F358535f937208EcAbf</string>
+</resources>

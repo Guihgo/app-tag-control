@@ -47,6 +47,11 @@ public class TagAddEdit extends AppCompatActivity {
         this.updateUI(id);
     }
 
+    @Override
+    public void setTheme(int resId) {
+        Helper.restoreTheme(this, false);
+    }
+
     void updateUI(String id) {
         /* Load entity */
         String[] projection = {

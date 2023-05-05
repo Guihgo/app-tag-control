@@ -16,8 +16,9 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/nav_header_title"
+        android:gravity="center"
         android:textColor="?attr/colorOnSurface"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/switch_theme"
@@ -25,7 +26,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/line_break"
         android:checked="false"
-        android:gravity="right"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:text="@string/theme" />
 
 </LinearLayout>

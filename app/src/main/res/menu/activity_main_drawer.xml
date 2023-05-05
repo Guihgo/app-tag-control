@@ -2,59 +2,65 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <item
-        android:title="@string/management">
+    <group android:checkableBehavior="all">
 
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_tags"
-                    android:icon="@drawable/ic_label"
-                    android:title="@string/menu_tag" />
-                <item
-                    android:id="@+id/nav_inventory"
-                    android:icon="@drawable/ic_inventory"
-                    android:title="@string/menu_inventory" />
-            </group>
-
-        </menu>
-
-    </item>
-
-    <group>
         <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/menu_settings" />
+            android:id="@id/nav_tags"
+            android:icon="@drawable/ic_label"
+            android:title="@string/menu_tag" />
         <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_quiz"
-            android:title="@string/menu_about" />
+            android:id="@id/nav_inventory"
+            android:icon="@drawable/ic_inventory"
+            android:title="@string/menu_inventory" />
     </group>
 
-<!--    <item-->
-<!--        android:id="@+id/management"-->
-<!--        android:title="@string/management"-->
-<!--        android:checkableBehavior="single">-->
-<!--        <menu>-->
-<!--            <item-->
-<!--                android:id="@+id/nav_tags"-->
-<!--                android:icon="@drawable/ic_label"-->
-<!--                android:title="@string/menu_tag" />-->
-<!--            <item-->
-<!--                android:id="@+id/nav_inventory"-->
-<!--                android:icon="@drawable/ic_inventory"-->
-<!--                android:title="@string/menu_inventory" />-->
-<!--        </menu>-->
-<!--    </item>-->
-<!--    <group android:checkableBehavior="single">-->
-<!--        <item-->
-<!--            android:id="@+id/nav_settings"-->
-<!--            android:icon="@drawable/ic_settings"-->
-<!--            android:title="@string/menu_settings" />-->
-<!--        <item-->
-<!--            android:id="@+id/nav_about"-->
-<!--            android:icon="@drawable/ic_quiz"-->
-<!--            android:title="@string/menu_about" />-->
-<!--    </group>-->
+    <item android:title="">
+        <menu>
+            <group android:checkableBehavior="all">
+                <item
+                    android:id="@id/nav_settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="@string/menu_settings" />
+
+            </group>
+        </menu>
+    </item>
+
+
+    <!--    <group>-->
+    <!--        <item-->
+    <!--            android:id="@id/nav_settings"-->
+    <!--            android:icon="@drawable/ic_settings"-->
+    <!--            android:title="@string/menu_settings" />-->
+    <!--&lt;!&ndash;        <item&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:id="@+id/nav_about"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:icon="@drawable/ic_quiz"&ndash;&gt;-->
+    <!--&lt;!&ndash;            android:title="@string/menu_about" />&ndash;&gt;-->
+    <!--    </group>-->
+
+    <!--    <item-->
+    <!--        android:id="@+id/management"-->
+    <!--        android:title="@string/management"-->
+    <!--        android:checkableBehavior="single">-->
+    <!--        <menu>-->
+    <!--            <item-->
+    <!--                android:id="@+id/nav_tags"-->
+    <!--                android:icon="@drawable/ic_label"-->
+    <!--                android:title="@string/menu_tag" />-->
+    <!--            <item-->
+    <!--                android:id="@+id/nav_inventory"-->
+    <!--                android:icon="@drawable/ic_inventory"-->
+    <!--                android:title="@string/menu_inventory" />-->
+    <!--        </menu>-->
+    <!--    </item>-->
+    <!--    <group android:checkableBehavior="single">-->
+    <!--        <item-->
+    <!--            android:id="@+id/nav_settings"-->
+    <!--            android:icon="@drawable/ic_settings"-->
+    <!--            android:title="@string/menu_settings" />-->
+    <!--        <item-->
+    <!--            android:id="@+id/nav_about"-->
+    <!--            android:icon="@drawable/ic_quiz"-->
+    <!--            android:title="@string/menu_about" />-->
+    <!--    </group>-->
 </menu>

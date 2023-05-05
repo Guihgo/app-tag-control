@@ -17,8 +17,11 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +29,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
 import com.guihgo.tagcontrol.Helper;
+import com.guihgo.tagcontrol.MainActivity;
 import com.guihgo.tagcontrol.R;
 import com.guihgo.tagcontrol.database.DatabaseHelper;
 import com.guihgo.tagcontrol.database.TagContract;
@@ -58,9 +62,6 @@ public class TagsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        TagsViewModel tagsViewModel =
-                new ViewModelProvider(this).get(TagsViewModel.class);
-
         binding = FragmentTagsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -182,6 +183,11 @@ public class TagsFragment extends Fragment {
         cursor.close();
 
         tagListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

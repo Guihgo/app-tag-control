@@ -106,6 +106,11 @@ public class InventoryAddEdit extends AppCompatActivity {
         datePicker.show(getSupportFragmentManager(), InventoryContract.InventoryEntry.COLUMN_NAME_EXPIRATION);
     }
 
+    @Override
+    public void setTheme(int resId) {
+        Helper.restoreTheme(this, false);
+    }
+
     void updateExpirationDateUI() {
         binding.inventoryExpirationDate.getEditText().setText((new SimpleDateFormat("dd/MM/yyyy - HH:mm", Locale.getDefault())).format(expirationDate.getTime()));
     }
