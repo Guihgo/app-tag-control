@@ -190,7 +190,7 @@ public class Helper {
         AlertDialog dialog = madbConfirm.show();
         /* Documentation: https://developer.android.com/reference/android/nfc/NfcAdapter#enableReaderMode(android.app.Activity,%20android.nfc.NfcAdapter.ReaderCallback,%20int,%20android.os.Bundle)*/
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT && NfcAdapter.getDefaultAdapter(activity) != null) {
             NfcAdapter.getDefaultAdapter(activity).enableReaderMode(activity, new NfcAdapter.ReaderCallback() {
                 @Override
                 public void onTagDiscovered(Tag tag) {
@@ -213,11 +213,14 @@ public class Helper {
     }
 
     public static void stopReadNFC(Activity activity) {
-        if (NfcAdapter.getDefaultAdapter(activity).isEnabled()) {
+        try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                NfcAdapter.getDefaultAdapter(activity).disableReaderMode(activity);
+                if (NfcAdapter.getDefaultAdapter(activity) != null && NfcAdapter.getDefaultAdapter(activity).isEnabled()) {
+                    NfcAdapter.getDefaultAdapter(activity).disableReaderMode(activity);
+                }
             }
-        }
+        } catch (Error e) {}
+
     }
 
     public static String bytesToHex(byte[] bytes) {

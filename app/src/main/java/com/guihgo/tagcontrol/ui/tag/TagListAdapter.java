@@ -83,6 +83,13 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.ViewHold
                 onItemInteractionListener.onItemClick(holder.getAbsoluteAdapterPosition());
             }
         });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return onItemInteractionListener.onTemLongClick(holder.getAbsoluteAdapterPosition(), v);
+            }
+        });
     }
 
     @Override

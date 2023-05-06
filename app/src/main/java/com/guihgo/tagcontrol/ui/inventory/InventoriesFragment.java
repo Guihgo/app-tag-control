@@ -128,6 +128,11 @@ public class InventoriesFragment extends Fragment {
                 intent.putExtra(InventoryContract.InventoryEntry.COLUMN_NAME_ID, inventoryListAdapter.inventoryEntityList.get(position).id);
                 startForResult.launch(intent);
             }
+
+            @Override
+            public boolean onTemLongClick(int position, View v) {
+                return false;
+            }
         });
 
         bnvMenu = binding.bottomNavigation;
@@ -163,26 +168,8 @@ public class InventoriesFragment extends Fragment {
                                     return;
                                 }
 
-                                String where = InventoryContract.InventoryEntry.COLUMN_NAME_TAG_ID + " = ?";
-                                String[] whereArgs = {tagId};
+                                InventoriesFragment.goToInventory(tagId, getActivity(), startForResult, db);
 
-                                Cursor cursor = db.query(InventoryContract.InventoryEntry.TABLE_NAME, projection, where, whereArgs, null, null, null);
-                                int id = -1;
-                                if (cursor.moveToFirst()) {
-                                    id = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryContract.InventoryEntry.COLUMN_NAME_ID));
-                                } else {
-                                    /* Insert one linked with tag id */
-                                    ContentValues cvInventory = new ContentValues();
-                                    cvInventory.put(InventoryContract.InventoryEntry.COLUMN_NAME_TAG_ID, tagId);
-                                    cvInventory.put(InventoryContract.InventoryEntry.COLUMN_NAME_EXPIRATION, (Calendar.getInstance().getTimeInMillis()));
-                                    cvInventory.put(InventoryContract.InventoryEntry.COLUMN_NAME_QUANTITY, 0);
-                                    id = (int) db.insert(InventoryContract.InventoryEntry.TABLE_NAME, null, cvInventory);
-                                }
-                                cursor.close();
-
-                                Intent intent = new Intent(getActivity(), InventoryAddEdit.class);
-                                intent.putExtra(InventoryContract.InventoryEntry.COLUMN_NAME_ID, id);
-                                startForResult.launch(intent);
                             }
                         });
                         return true;
@@ -192,6 +179,30 @@ public class InventoriesFragment extends Fragment {
         });
 
         return root;
+    }
+
+    public static void goToInventory(String tagId, Activity activity, ActivityResultLauncher<Intent> startForResult, SQLiteDatabase db) {
+        String[] projection = {"*"};
+        String where = InventoryContract.InventoryEntry.COLUMN_NAME_TAG_ID + " = ?";
+        String[] whereArgs = {tagId};
+
+        Cursor cursor = db.query(InventoryContract.InventoryEntry.TABLE_NAME, projection, where, whereArgs, null, null, null);
+        int id = -1;
+        if (cursor.moveToFirst()) {
+            id = cursor.getInt(cursor.getColumnIndexOrThrow(InventoryContract.InventoryEntry.COLUMN_NAME_ID));
+        } else {
+            /* Insert one linked with tag id */
+            ContentValues cvInventory = new ContentValues();
+            cvInventory.put(InventoryContract.InventoryEntry.COLUMN_NAME_TAG_ID, tagId);
+            cvInventory.put(InventoryContract.InventoryEntry.COLUMN_NAME_EXPIRATION, (Calendar.getInstance().getTimeInMillis()));
+            cvInventory.put(InventoryContract.InventoryEntry.COLUMN_NAME_QUANTITY, 0);
+            id = (int) db.insert(InventoryContract.InventoryEntry.TABLE_NAME, null, cvInventory);
+        }
+        cursor.close();
+
+        Intent intent = new Intent(activity, InventoryAddEdit.class);
+        intent.putExtra(InventoryContract.InventoryEntry.COLUMN_NAME_ID, id);
+        startForResult.launch(intent);
     }
 
     void refreshData() {

@@ -5,19 +5,24 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.GravityInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.PopupMenuCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -32,10 +37,13 @@ import com.guihgo.tagcontrol.Helper;
 import com.guihgo.tagcontrol.MainActivity;
 import com.guihgo.tagcontrol.R;
 import com.guihgo.tagcontrol.database.DatabaseHelper;
+import com.guihgo.tagcontrol.database.InventoryContract;
 import com.guihgo.tagcontrol.database.TagContract;
 import com.guihgo.tagcontrol.databinding.FragmentTagsBinding;
 import com.guihgo.tagcontrol.model.tag.TagEntity;
 import com.guihgo.tagcontrol.ui.helper.OnItemInteractionListener;
+import com.guihgo.tagcontrol.ui.inventory.InventoriesFragment;
+import com.guihgo.tagcontrol.ui.inventory.InventoryAddEdit;
 
 import java.util.ArrayList;
 
@@ -117,6 +125,30 @@ public class TagsFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), TagAddEdit.class);
                 intent.putExtra(TagContract.TagEntry.COLUMN_NAME_ID, tagListAdapter.tagEntityList.get(position).id);
                 startForResult.launch(intent);
+            }
+
+            @Override
+            public boolean onTemLongClick(int position, View v) {
+                PopupMenu popup = new PopupMenu(getContext(), v);
+                popup.getMenuInflater().inflate(R.menu.tags_item, popup.getMenu());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    popup.setForceShowIcon(true);
+                    popup.setGravity(Gravity.FILL_HORIZONTAL);
+                }
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.go_to_inventory:
+                                String tagId = tagListAdapter.tagEntityList.get(position).id;
+                                InventoriesFragment.goToInventory(tagId, getActivity(), startForResult, db);
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+                return false;
             }
         });
 
